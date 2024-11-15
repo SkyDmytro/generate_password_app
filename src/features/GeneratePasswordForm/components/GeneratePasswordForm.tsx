@@ -1,5 +1,6 @@
 import { cn } from '@/lib/cn';
 
+import { GeneratePasswordFormInput } from './GeneratePasswordFormInput';
 import { GeneratePasswordFormSlider } from './GeneratePasswordFormSlider';
 import { GeneratePasswordFormTitle } from './GeneratePasswordFormTitle';
 
@@ -10,6 +11,7 @@ export const GeneratePasswordForm = () => {
   return (
     <div className={mainClasses}>
       <GeneratePasswordFormTitle />
+      <GeneratePasswordFormInput />
       <GeneratePasswordFormSlider />
     </div>
   );
