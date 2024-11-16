@@ -1,44 +1,58 @@
 import { passwordRulesType } from '../types/types';
 
+const charSets = {
+  uppercaseLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  lowercaseLetters: 'abcdefghijklmnopqrstuvwxyz',
+  numbers: '0123456789',
+  symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-=',
+};
+
 export const getPassword = (passwordRules: passwordRulesType) => {
-  const UPPERCASE_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const LOWERCASE_LETTERS = 'abcdefghijklmnopqrstuvwxyz';
-  const NUMBERS = '0123456789';
-  const SYMBOLS = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+  const { includeNumbers, includeSymbols, includeUppercase, length } =
+    passwordRules;
 
-  let rulesCount = 0;
-  let charset = LOWERCASE_LETTERS;
-  let password = '';
+  const { charset, requiredChars } = buildCharsetAndRequiredChars({
+    includeNumbers,
+    includeSymbols,
+    includeUppercase,
+  });
 
-  if (passwordRules.includeUppercase) {
-    charset += UPPERCASE_LETTERS;
-    password += getRandomChar(UPPERCASE_LETTERS);
-    rulesCount += 1;
-  }
+  const randomChars = getRandomChars(length - requiredChars.length, charset);
 
-  if (passwordRules.includeNumbers) {
-    charset += NUMBERS;
-    password += getRandomChar(NUMBERS);
-    rulesCount += 1;
-  }
-
-  if (passwordRules.includeSymbols) {
-    charset += SYMBOLS;
-    password += getRandomChar(SYMBOLS);
-    rulesCount += 1;
-  }
-  for (let i = 0; i < passwordRules.length - rulesCount; i++) {
-    password += getRandomChar(charset);
-  }
-  return shuffleString(password);
+  return shuffleString(requiredChars + randomChars);
 };
 
 const getRandomChar = (charset: string) => {
   return charset.charAt(Math.floor(Math.random() * charset.length));
+};
+const getRandomChars = (length: number, charset: string) => {
+  return Array.from({ length }, () => getRandomChar(charset)).join('');
 };
 const shuffleString = (str: string) => {
   return str
     .split('')
     .sort(() => Math.random() - 0.5)
     .join('');
+};
+
+const buildCharsetAndRequiredChars = ({
+  includeNumbers,
+  includeSymbols,
+  includeUppercase,
+}: Omit<passwordRulesType, 'length'>) => {
+  let charset = charSets.lowercaseLetters;
+  let requiredChars = '';
+  if (includeUppercase) {
+    charset += charSets.uppercaseLetters;
+    requiredChars += getRandomChar(charSets.uppercaseLetters);
+  }
+  if (includeNumbers) {
+    charset += charSets.numbers;
+    requiredChars += getRandomChar(charSets.numbers);
+  }
+  if (includeSymbols) {
+    charset += charSets.symbols;
+    requiredChars += getRandomChar(charSets.symbols);
+  }
+  return { charset, requiredChars };
 };
