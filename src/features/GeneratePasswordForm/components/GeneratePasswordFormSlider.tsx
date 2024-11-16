@@ -3,6 +3,10 @@
 import { Slider } from '@/components/ui/Slider';
 
 import { useHandleSlider } from '../hooks/useHandleSlider';
+import {
+  DEFAULT_PASSWORD_LENGTH,
+  MAX_PASSWORD_LENGTH,
+} from '../utils/constants';
 
 export const GeneratePasswordFormSlider = () => {
   const { sliderPercent, debouncedHandleChangeSlider } = useHandleSlider();
@@ -13,8 +17,8 @@ export const GeneratePasswordFormSlider = () => {
         <span>{sliderPercent[0]}</span>
       </div>
       <Slider
-        defaultValue={[8]}
-        max={100}
+        defaultValue={[DEFAULT_PASSWORD_LENGTH]}
+        max={MAX_PASSWORD_LENGTH}
         step={1}
         onValueChange={debouncedHandleChangeSlider}
       />
