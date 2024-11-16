@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/cn';
 
+import { GeneratePasswordFormButton } from './GeneratePasswordFormButton';
 import { GeneratePasswordFormCheckBox } from './GeneratePasswordFormCheckBox';
 import { GeneratePasswordFormInput } from './GeneratePasswordFormInput';
 import { GeneratePasswordFormPasswordStrengthIndicator } from './GeneratePasswordFormPasswordStrengthIndicator';
@@ -42,6 +43,11 @@ export const GeneratePasswordForm = () => {
         />
       </div>
       <GeneratePasswordFormPasswordStrengthIndicator strength={3} />
+      <GeneratePasswordFormButton
+        onClick={() => {
+          console.log(1);
+        }}
+      />
     </div>
   );
 };
