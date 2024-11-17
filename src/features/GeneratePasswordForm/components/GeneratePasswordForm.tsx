@@ -2,6 +2,12 @@
 
 import { cn } from '@/lib/cn';
 
+import { useEffect, useMemo, useState } from 'react';
+
+import { useHandleSlider } from '../hooks/useHandleSlider';
+import { passwordRulesType } from '../types/types';
+import { generatePassword } from '../utils/generatePassword';
+import { getPasswordStrength } from '../utils/getPasswordStrength';
 import { GeneratePasswordFormButton } from './GeneratePasswordFormButton';
 import { GeneratePasswordFormCheckBox } from './GeneratePasswordFormCheckBox';
 import { GeneratePasswordFormInput } from './GeneratePasswordFormInput';
@@ -10,15 +16,54 @@ import { GeneratePasswordFormSlider } from './GeneratePasswordFormSlider';
 import { GeneratePasswordFormTitle } from './GeneratePasswordFormTitle';
 
 export const GeneratePasswordForm = () => {
-  const mainClasses = cn(
-    'max-w-md p-8 space-y-6 bg-gray-900 rounded-xl shadow-lg border border-green-500 ',
+  const [password, setPassword] = useState<string>('');
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+  const { debouncedHandleChangeSlider, sliderPercent } = useHandleSlider();
+  const [isNumbersChecked, setIsNumbersChecked] = useState<boolean>(false);
+  const [isSymbolsChecked, setIsSymbolsChecked] = useState<boolean>(false);
+  const [isUppercaseChecked, setIsUppercaseChecked] = useState<boolean>(false);
+
+  const passwordRules: passwordRulesType = useMemo(
+    () => ({
+      length: sliderPercent[0],
+      includeNumbers: isNumbersChecked,
+      includeSymbols: isSymbolsChecked,
+      includeUppercase: isUppercaseChecked,
+    }),
+    [isNumbersChecked, isSymbolsChecked, isUppercaseChecked, sliderPercent],
   );
+  const handleReGeneratePassword = () => {
+    setPassword(generatePassword(passwordRules));
+  };
+
+  // On password rules change
+  useEffect(() => {
+    const newPassword = generatePassword(passwordRules);
+    setPassword(newPassword);
+  }, [passwordRules]);
+
+  useEffect(() => {
+    const passwordStrength = getPasswordStrength(password);
+    setPasswordStrength(passwordStrength);
+  }, [password]);
+
+  // On slider change
+  useEffect(() => {
+    passwordRules.length = sliderPercent[0];
+  }, [passwordRules, sliderPercent]);
 
   return (
-    <div className={mainClasses}>
+    <div
+      className={cn(
+        'max-w-md p-8 space-y-6 bg-gray-900 rounded-xl shadow-lg border border-green-500 ',
+      )}
+    >
       <GeneratePasswordFormTitle />
-      <GeneratePasswordFormInput />
-      <GeneratePasswordFormSlider />
+      <GeneratePasswordFormInput password={password} />
+      <GeneratePasswordFormSlider
+        length={sliderPercent[0]}
+        onSliderChange={debouncedHandleChangeSlider}
+      />
       <div className="flex flex-col gap-2">
         <GeneratePasswordFormCheckBox
           label="Include Uppercase Letters"
@@ -42,12 +87,10 @@ export const GeneratePasswordForm = () => {
           isChecked={false}
         />
       </div>
-      <GeneratePasswordFormPasswordStrengthIndicator strength={3} />
-      <GeneratePasswordFormButton
-        onClick={() => {
-          console.log(1);
-        }}
+      <GeneratePasswordFormPasswordStrengthIndicator
+        strength={passwordStrength}
       />
+      <GeneratePasswordFormButton onClick={handleReGeneratePassword} />
     </div>
   );
 };

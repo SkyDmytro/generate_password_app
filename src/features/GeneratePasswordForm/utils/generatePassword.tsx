@@ -7,7 +7,7 @@ const charSets = {
   symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-=',
 };
 
-export const getPassword = (passwordRules: passwordRulesType) => {
+export const generatePassword = (passwordRules: passwordRulesType) => {
   const { includeNumbers, includeSymbols, includeUppercase, length } =
     passwordRules;
 
