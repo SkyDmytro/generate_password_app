@@ -1,26 +1,28 @@
-'use client';
-
 import { Slider } from '@/components/ui/Slider';
 
-import { useHandleSlider } from '../hooks/useHandleSlider';
 import {
   DEFAULT_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH,
 } from '../utils/constants';
 
-export const GeneratePasswordFormSlider = () => {
-  const { sliderPercent, debouncedHandleChangeSlider } = useHandleSlider();
+export const GeneratePasswordFormSlider = ({
+  length,
+  onSliderChange,
+}: {
+  length: number;
+  onSliderChange: (value: number[]) => void;
+}) => {
   return (
     <div>
       <div className="flex justify-between mb-4 ">
         <span>Password Length</span>
-        <span>{sliderPercent[0]}</span>
+        <span>{length}</span>
       </div>
       <Slider
         defaultValue={[DEFAULT_PASSWORD_LENGTH]}
         max={MAX_PASSWORD_LENGTH}
         step={1}
-        onValueChange={debouncedHandleChangeSlider}
+        onValueChange={onSliderChange}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 
 import { passwordRulesType } from '../types/types';
-import { getPassword as generatePassword } from '../utils/generatePassword';
+import { generatePassword } from '../utils/generatePassword';
 
 const hasUppercase = (str: string) => /[A-Z]/.test(str);
 const hasNumbers = (str: string) => /[0-9]/.test(str);

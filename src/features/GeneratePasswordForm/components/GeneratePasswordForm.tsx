@@ -19,9 +19,9 @@ export const GeneratePasswordForm = () => {
   const [password, setPassword] = useState<string>('');
   const [passwordStrength, setPasswordStrength] = useState<number>(0);
   const { debouncedHandleChangeSlider, sliderPercent } = useHandleSlider();
-  const [isNumbersChecked, setIsNumbersChecked] = useState<boolean>(false);
-  const [isSymbolsChecked, setIsSymbolsChecked] = useState<boolean>(false);
-  const [isUppercaseChecked, setIsUppercaseChecked] = useState<boolean>(false);
+  const [isNumbersChecked] = useState<boolean>(false);
+  const [isSymbolsChecked] = useState<boolean>(false);
+  const [isUppercaseChecked] = useState<boolean>(false);
 
   const passwordRules: passwordRulesType = useMemo(
     () => ({
