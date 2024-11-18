@@ -21,6 +21,7 @@ export const GeneratePasswordFormSlider = ({
       <Slider
         defaultValue={[DEFAULT_PASSWORD_LENGTH]}
         max={MAX_PASSWORD_LENGTH}
+        min={DEFAULT_PASSWORD_LENGTH}
         step={1}
         onValueChange={onSliderChange}
       />
