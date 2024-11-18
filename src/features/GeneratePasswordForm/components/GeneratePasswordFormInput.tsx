@@ -1,24 +1,23 @@
-'use client';
-
-import { useState } from 'react';
-
 import { Copy } from 'lucide-react';
 
 import { useClipboard } from '../hooks/useClipboard';
 
-export const GeneratePasswordFormInput = () => {
+export const GeneratePasswordFormInput = ({
+  password,
+}: {
+  password: string;
+}) => {
   const { copyResult: copyResultMessage, copyToClipboard } = useClipboard();
-  const [inputValue] = useState<string>('dsadsa');
 
   const handleCopy = () => {
-    copyToClipboard(inputValue);
+    copyToClipboard(password);
   };
 
   return (
     <div className="rounded-md">
       <div className=" bg-black flex justify-between items-center p-2 border-green-500 rounded-md  border-[1px] ">
         <input
-          value={inputValue}
+          value={password}
           type="text"
           disabled
           className="bg-black rounded-lg w-full"

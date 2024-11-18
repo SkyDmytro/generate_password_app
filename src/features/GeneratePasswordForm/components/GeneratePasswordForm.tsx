@@ -1,7 +1,11 @@
 'use client';
 
-import { cn } from '@/lib/cn';
+import { useEffect, useState } from 'react';
 
+import { useHandleSlider } from '../hooks/useHandleSlider';
+import { usePasswordSettings } from '../hooks/usePasswordSettings';
+import { generatePassword } from '../utils/generatePassword';
+import { getPasswordStrength } from '../utils/getPasswordStrength';
 import { GeneratePasswordFormButton } from './GeneratePasswordFormButton';
 import { GeneratePasswordFormCheckBox } from './GeneratePasswordFormCheckBox';
 import { GeneratePasswordFormInput } from './GeneratePasswordFormInput';
@@ -10,44 +14,57 @@ import { GeneratePasswordFormSlider } from './GeneratePasswordFormSlider';
 import { GeneratePasswordFormTitle } from './GeneratePasswordFormTitle';
 
 export const GeneratePasswordForm = () => {
-  const mainClasses = cn(
-    'max-w-md p-8 space-y-6 bg-gray-900 rounded-xl shadow-lg border border-green-500 ',
-  );
+  const { rules, toggleRule, setLength } = usePasswordSettings();
+  const { debouncedHandleChangeSlider, sliderPercent } = useHandleSlider();
+  const [password, setPassword] = useState<string>('');
+  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+
+  const regeneratePassword = () => {
+    setPassword(generatePassword(rules));
+  };
+
+  console.log(rules);
+  useEffect(() => {
+    setLength(sliderPercent);
+  }, [sliderPercent]);
+
+  useEffect(() => {
+    setPassword(generatePassword(rules));
+  }, [rules]);
+
+  useEffect(() => {
+    setPasswordStrength(getPasswordStrength(password));
+  }, [password]);
 
   return (
-    <div className={mainClasses}>
+    <div className="max-w-md p-8 space-y-6 bg-gray-900 rounded-xl shadow-lg border border-green-500">
       <GeneratePasswordFormTitle />
-      <GeneratePasswordFormInput />
-      <GeneratePasswordFormSlider />
+      <GeneratePasswordFormInput password={password} />
+      <GeneratePasswordFormSlider
+        length={rules.length}
+        onSliderChange={debouncedHandleChangeSlider}
+      />
       <div className="flex flex-col gap-2">
         <GeneratePasswordFormCheckBox
           label="Include Uppercase Letters"
-          handleCheckedChange={() => {
-            console.log('1');
-          }}
-          isChecked={true}
+          handleCheckedChange={() => toggleRule('includeUppercase')}
+          isChecked={rules.includeUppercase}
         />
         <GeneratePasswordFormCheckBox
           label="Include Numbers"
-          handleCheckedChange={() => {
-            console.log('2');
-          }}
-          isChecked={false}
+          handleCheckedChange={() => toggleRule('includeNumbers')}
+          isChecked={rules.includeNumbers}
         />
         <GeneratePasswordFormCheckBox
           label="Include Symbols"
-          handleCheckedChange={() => {
-            console.log('3');
-          }}
-          isChecked={false}
+          handleCheckedChange={() => toggleRule('includeSymbols')}
+          isChecked={rules.includeSymbols}
         />
       </div>
-      <GeneratePasswordFormPasswordStrengthIndicator strength={3} />
-      <GeneratePasswordFormButton
-        onClick={() => {
-          console.log(1);
-        }}
+      <GeneratePasswordFormPasswordStrengthIndicator
+        strength={passwordStrength}
       />
+      <GeneratePasswordFormButton onClick={regeneratePassword} />
     </div>
   );
 };
