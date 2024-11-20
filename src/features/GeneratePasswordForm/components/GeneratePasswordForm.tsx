@@ -23,7 +23,6 @@ export const GeneratePasswordForm = () => {
     setPassword(generatePassword(rules));
   };
 
-  console.log(rules);
   useEffect(() => {
     setLength(sliderPercent);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -47,16 +46,19 @@ export const GeneratePasswordForm = () => {
       />
       <div className="flex flex-col gap-2">
         <GeneratePasswordFormCheckBox
+          id="uppercase"
           label="Include Uppercase Letters"
           handleCheckedChange={() => toggleRule('includeUppercase')}
           isChecked={rules.includeUppercase}
         />
         <GeneratePasswordFormCheckBox
+          id="numbers"
           label="Include Numbers"
           handleCheckedChange={() => toggleRule('includeNumbers')}
           isChecked={rules.includeNumbers}
         />
         <GeneratePasswordFormCheckBox
+          id="symbols"
           label="Include Symbols"
           handleCheckedChange={() => toggleRule('includeSymbols')}
           isChecked={rules.includeSymbols}
