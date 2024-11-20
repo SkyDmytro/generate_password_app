@@ -25,7 +25,6 @@ export const GeneratePasswordForm = () => {
 
   useEffect(() => {
     setLength(sliderPercent);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sliderPercent]);
 
   useEffect(() => {
